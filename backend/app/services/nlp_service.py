@@ -28,6 +28,7 @@ async def process_text(text: str) -> Tuple[List[Dict[str, Union[str, int]]], Lis
     doc = nlp(text)
     entities = extract_entities(doc)
     mwes = extract_mwes(doc)
+
     return entities, mwes
 
 def extract_entities(doc: spacy.tokens.Doc) -> List[Dict[str, Union[str, int]]]:
@@ -60,20 +61,14 @@ def extract_mwes(doc: spacy.tokens.Doc) -> List[Dict[str, Union[str, int]]]:
     Returns:
         List[Dict[str, Union[str, int]]]: A list of dictionaries containing the extracted MWEs.
     """
-    mwes = []
+    unique_mwes = set()
+
     for chunk in doc.noun_chunks:
         if len(chunk) > 1:
-            mwes.append({
-                "text": chunk.text,
-                "start": chunk.start_char,
-                "end": chunk.end_char,
-            })
+            unique_mwes.add((chunk.text, chunk.start_char, chunk.end_char))
+
     for ent in doc.ents:
         if len(ent) > 1:
-            mwes.append({
-                "text": ent.text,
-                "start": ent.start_char,
-                "end": ent.end_char,
-            })
-    unique_mwes = {(mwe['text'], mwe['start'], mwe['end']): mwe for mwe in mwes}
-    return list(unique_mwes.values())
+            unique_mwes.add((ent.text, ent.start_char, ent.end_char))
+
+    return [{"text": text, "start": start, "end": end} for text, start, end in unique_mwes]

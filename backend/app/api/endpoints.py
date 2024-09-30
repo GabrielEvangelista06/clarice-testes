@@ -38,7 +38,7 @@ async def process_text(payload: TextPayload, request: Request, _: None = Depends
     }
 
 @router.get("/data")
-async def get_data():
+async def get_data(_: None = Depends(rate_limiter)):
     """
     Endpoint to retrieve all stored data from the database.
 
