@@ -1,6 +1,7 @@
 import spacy
 from functools import lru_cache
 from typing import List, Dict, Union, Tuple
+import asyncio
 
 @lru_cache()
 def get_nlp_model():
@@ -25,13 +26,16 @@ async def process_text(text: str) -> Tuple[List[Dict[str, Union[str, int]]], Lis
         Tuple[List[Dict[str, Union[str, int]]], List[Dict[str, Union[str, int]]]]: A tuple containing a list of extracted entities and a list of extracted MWEs.
     """
     nlp = get_nlp_model()
-    doc = nlp(text)
-    entities = extract_entities(doc)
-    mwes = extract_mwes(doc)
+    loop = asyncio.get_event_loop()
+    doc = await loop.run_in_executor(None, nlp, text)
+    entities_task = asyncio.create_task(extract_entities(doc))
+    mwes_task = asyncio.create_task(extract_mwes(doc))
+
+    entities, mwes = await asyncio.gather(entities_task, mwes_task)
 
     return entities, mwes
 
-def extract_entities(doc: spacy.tokens.Doc) -> List[Dict[str, Union[str, int]]]:
+async def extract_entities(doc: spacy.tokens.Doc) -> List[Dict[str, Union[str, int]]]:
     """
     Extract entities from the processed text.
 
@@ -51,7 +55,7 @@ def extract_entities(doc: spacy.tokens.Doc) -> List[Dict[str, Union[str, int]]]:
         for ent in doc.ents
     ]
 
-def extract_mwes(doc: spacy.tokens.Doc) -> List[Dict[str, Union[str, int]]]:
+async def extract_mwes(doc: spacy.tokens.Doc) -> List[Dict[str, Union[str, int]]]:
     """
     Extract multi-word expressions (MWEs) from the processed text.
 
