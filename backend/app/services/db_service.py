@@ -20,6 +20,7 @@ async def init_db():
             )
         ''')
         await db.commit()
+        await db.close()
 
 # Armazena os dados processados no banco de dados
 async def store_processed_data(original_text: str, entities: List[Dict[str, Union[str, int]]], mwes: List[Dict[str, Union[str, int]]]):
@@ -37,6 +38,7 @@ async def store_processed_data(original_text: str, entities: List[Dict[str, Unio
             VALUES (?, ?, ?)
         ''', (original_text, str(entities), str(mwes)))
         await db.commit()
+        await db.close()
 
 # Recupera todos os dados armazenados
 async def get_all_data():
@@ -59,4 +61,5 @@ async def get_all_data():
             }
             for row in rows
         ]
+        await db.close()
         return result
