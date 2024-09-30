@@ -21,17 +21,17 @@ interface User {
 export default async function PostDetails({ params }: PageProps) {
 	const postId = params.id;
 
-	// Busca os dados da postagem
+	// Fetch the post data
 	const resPost = await fetch(
 		`https://jsonplaceholder.typicode.com/posts/${postId}`,
 	);
 	if (!resPost.ok) {
-		// Se a postagem não for encontrada, retorna um 404
+		// If the post is not found, return a 404
 		notFound();
 	}
 	const post: Post = await resPost.json();
 
-	// Busca os dados do autor
+	// Fetch the author data
 	const resUser = await fetch(
 		`https://jsonplaceholder.typicode.com/users/${post.userId}`,
 	);
