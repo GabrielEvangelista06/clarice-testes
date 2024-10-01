@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Depends
+from fastapi import APIRouter, Depends
 from app.models.schemas import TextPayload
 from app.services import nlp_service, db_service, external_service
 from app.utils.rate_limiter import rate_limiter
@@ -6,7 +6,7 @@ from app.utils.rate_limiter import rate_limiter
 router = APIRouter()
 
 @router.post("/process-text")
-async def process_text(payload: TextPayload, request: Request, _: None = Depends(rate_limiter)):
+async def process_text(payload: TextPayload, _: None = Depends(rate_limiter)):
     """
     Endpoint to process the input text, extract entities and multi-word expressions (MWEs),
     store the processed data in the database, and call an external API.
