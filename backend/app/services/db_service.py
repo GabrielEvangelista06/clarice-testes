@@ -22,6 +22,14 @@ async def init_db():
         await db.commit()
         await db.close()
 
+async def on_shutdown_db():
+    """
+    Perform cleanup tasks on shutdown.
+    """
+    # Example: Close any persistent connections or perform other cleanup tasks
+    async with aiosqlite.connect(DATABASE_URL) as db:
+        await db.close()        
+
 # Armazena os dados processados no banco de dados
 async def store_processed_data(original_text: str, entities: List[Dict[str, Union[str, int]]], mwes: List[Dict[str, Union[str, int]]]):
     """
