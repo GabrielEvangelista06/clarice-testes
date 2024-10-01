@@ -1,6 +1,12 @@
 import { BlogPosts } from "@/components/blog-posts";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+	title: "Blog Posts - Clarice",
+	description: "A list of blog posts.",
+};
 
 interface PageProps {
 	searchParams: { [key: string]: string | string[] | undefined };
