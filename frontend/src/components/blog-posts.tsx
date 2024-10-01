@@ -30,7 +30,7 @@ export function BlogPosts({
 
 	return (
 		<div className="container mx-auto px-4 py-8">
-			<div className="flex items-center gap-2 justify-between">
+			<div className="flex flex-col items-center gap-2 justify-between md:flex-row">
 				<h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
 					Clarice Posts
 				</h1>
@@ -39,7 +39,7 @@ export function BlogPosts({
 					placeholder="Pesquisar postagens..."
 					value={searchTerm}
 					onChange={(e) => setSearchTerm(e.target.value)}
-					className="rounded px-4 py-2 w-1/2"
+					className="rounded px-4 py-2 w-full md:w-1/2"
 				/>
 			</div>
 
